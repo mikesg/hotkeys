@@ -30,4 +30,34 @@ return
 return
 
 #q:: Run, D:\MIST\Projects\2013
-:o:snl::\\SNOW-LEOPARD\Work
+
+:?*:snl::
+    Input, proj_code, v,{Enter}{Space}
+    StringLen, code_len, proj_code
+    code_len++
+    proj_folder := ProjectFolder("\\SNOW-LEOPARD\Work", proj_code)
+    SendInput {BackSpace %code_len%}%proj_folder%
+    Return
+
+:?*:prf::
+    Input, proj_code, v,{Enter}{Space}
+    StringLen, code_len, proj_code
+    code_len++
+    proj_folder := ProjectFolder("D:\MIST\Projects\2013", proj_code)
+    SendInput {BackSpace %code_len%}%proj_folder%
+    Return
+
+
+ProjectFolder(project_folder, proj_code) {
+    If (proj_code = "")
+    {
+        return project_folder
+    }
+    pattern = %project_folder%\%proj_code%_*
+    Loop %pattern%, 2, 0
+    {
+        result =  %project_folder%\%A_LoopFileName%
+        return result
+    }
+    return project_folder
+}
