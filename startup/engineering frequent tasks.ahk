@@ -33,20 +33,26 @@ return
 
 :?*:snl::
     Input, proj_code, v,{Enter}{Space}
-    StringLen, code_len, proj_code
-    code_len++
     proj_folder := ProjectFolder("\\SNOW-LEOPARD\Work", proj_code)
-    SendInput {BackSpace %code_len%}%proj_folder%
+    ExpandString(proj_code, proj_folder)
     Return
 
 :?*:prf::
     Input, proj_code, v,{Enter}{Space}
-    StringLen, code_len, proj_code
-    code_len++
     proj_folder := ProjectFolder("D:\MIST\Projects\2013", proj_code)
-    SendInput {BackSpace %code_len%}%proj_folder%
+    ExpandString(proj_code, proj_folder)
     Return
 
+ExpandString(source, expanded) {
+    StringLen, source_len, source
+    source_len++
+    ;SendInput {BackSpace %source_len%}%expanded%
+    ;This is a workaround because e.g. ZWCAD does not recognize correctly the events from SendInput
+    SendInput {BackSpace %source_len%}
+    clipboard := expanded
+    Send ^v
+    return true
+}
 
 ProjectFolder(project_folder, proj_code) {
     If (proj_code = "")
