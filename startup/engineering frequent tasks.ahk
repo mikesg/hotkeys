@@ -49,8 +49,14 @@ ExpandString(source, expanded) {
     ;SendInput {BackSpace %source_len%}%expanded%
     ;This is a workaround because e.g. ZWCAD does not recognize correctly the events from SendInput
     SendInput {BackSpace %source_len%}
+
+    clipboard_content := ClipboardAll
     clipboard := expanded
     Send ^v
+    Sleep 500
+    clipboard := clipboard_content
+    clipboard_content =
+
     return true
 }
 
