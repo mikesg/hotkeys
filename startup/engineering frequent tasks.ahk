@@ -3,6 +3,13 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
+snow_leopard_folders := Object()
+snow_leopard_folders.insert("\\SNOW-LEOPARD\Work")
+
+cheetah_folders := Object()
+cheetah_folders.insert("D:\Mist\Projects\2014")
+cheetah_folders.insert("D:\Mist\Projects\2013")
+
 #z::
     IfWinExist, ZWCAD+
     {
@@ -29,17 +36,17 @@ return
     }
 return
 
-#q:: Run, D:\MIST\Projects\2013
+#q:: Run, D:\MIST\Projects\2014
 
 :?*:snl::
     Input, proj_code, v,{Enter}{Space}
-    proj_folder := ProjectFolder("\\SNOW-LEOPARD\Work", proj_code)
+    proj_folder := ProjectFolder(snow_leopard_folders, proj_code)
     ExpandString(proj_code, proj_folder)
     Return
 
 :?*:prf::
     Input, proj_code, v,{Enter}{Space}
-    proj_folder := ProjectFolder("D:\MIST\Projects\2013", proj_code)
+    proj_folder := ProjectFolder(cheetah_folders, proj_code)
     ExpandString(proj_code, proj_folder)
     Return
 
@@ -60,16 +67,29 @@ ExpandString(source, expanded) {
     return true
 }
 
-ProjectFolder(project_folder, proj_code) {
+ProjectFolder(project_folders, proj_code) {
     If (proj_code = "")
     {
         return project_folder
     }
+    for index, project_folder in project_folders
+    {
+        result := ProjectFolderByDir(project_folder, proj_code)
+        If (result <> "")
+        {
+            return result
+        }
+
+    }
+    return project_folders[1]
+}
+
+ProjectFolderByDir(project_folder, proj_code) {
     pattern = %project_folder%\%proj_code%_*
     Loop %pattern%, 2, 0
     {
         result =  %project_folder%\%A_LoopFileName%
         return result
     }
-    return project_folder
+    return ""
 }
